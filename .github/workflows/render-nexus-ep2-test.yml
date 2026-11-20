@@ -2,11 +2,10 @@ name: render-nexus-ep2-test
 
 # Uji 120 frame film NEXUS ZERO Episode 2 "THE FIRST DOUBT" (Eevee, setting B7
 # dengan DEVIASI TERUKUR: samples 6, bukan 8 — sama seperti Ep 1 / zombie v2):
-# RONDE 6 (mini, pasca Fix Ronde 3c — two-shot S3c paruh kedua): 1 segmen
-# x 24 frame, 4 job x 6 frame
-#   - S3c two-shot, f560-583 (Blender 561-584): Kairo + EVA satu frame?
-#   - 9:16 540x960 lensk 0.62 saja. Ronde 5: 44733789296 (Kairo ada, EVA
-#   masih di luar frame di f480-503 karena jalannya baru selesai f599).
+# RONDE 7 (mini, pasca Fix Ronde 4 — dim akhir 0.92): 1 segmen x 30 frame,
+# 5 job x 6 frame
+#   - S8b akhir, f1410-1439 (Blender 1411-1440): akhir mendekati hitam?
+#   - 9:16 540x960 lensk 0.62 saja. Ronde 6: 44735263308 (two-shot LOLOS).
 on:
   workflow_dispatch:
 
@@ -18,10 +17,11 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { fmt: "9x16", seg: "s3c-01", res_x: 540, res_y: 960, lensk: "0.62", start: 561,    end: 566 }
-          - { fmt: "9x16", seg: "s3c-02", res_x: 540, res_y: 960, lensk: "0.62", start: 567,    end: 572 }
-          - { fmt: "9x16", seg: "s3c-03", res_x: 540, res_y: 960, lensk: "0.62", start: 573,    end: 578 }
-          - { fmt: "9x16", seg: "s3c-04", res_x: 540, res_y: 960, lensk: "0.62", start: 579,    end: 584 }
+          - { fmt: "9x16", seg: "s8b-01", res_x: 540, res_y: 960, lensk: "0.62", start: 1411,    end: 1416 }
+          - { fmt: "9x16", seg: "s8b-02", res_x: 540, res_y: 960, lensk: "0.62", start: 1417,    end: 1422 }
+          - { fmt: "9x16", seg: "s8b-03", res_x: 540, res_y: 960, lensk: "0.62", start: 1423,    end: 1428 }
+          - { fmt: "9x16", seg: "s8b-04", res_x: 540, res_y: 960, lensk: "0.62", start: 1429,    end: 1434 }
+          - { fmt: "9x16", seg: "s8b-05", res_x: 540, res_y: 960, lensk: "0.62", start: 1435,    end: 1440 }
     env:
       FS_SAMPLES: "6"
       FS_RAY: "0"

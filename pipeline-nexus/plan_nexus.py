@@ -473,7 +473,7 @@ for f in range(N):
             chars_cam = cam(RX + 0.6, lerp(-4.5, -7.5, smooth(t)), lerp(1.3, 2.0, smooth(t)),
                             RX, 5.0, 1.4, lerp(8.0, 11.0, smooth(t)), lerp(48, 42, t))
             # ruangan meredup menuju hitam (nexus + gate turun pelan)
-            dim = 1.0 - 0.55 * smooth(seg_t(f, 1400, 1439))
+            dim = 1.0 - 0.92 * smooth(seg_t(f, 1400, 1439))  # FIX R4: 0.55 -> 0.92 — akhir harus HITAM (end card di atas hitam), bukan 45% terang
             li = lights(moon=80, nexus=1500 * dim, rim=600 * dim, fill=200 * dim,
                         core=150, gate=400 * dim, eva=500 * dim, eye=700,
                         neon=0, lamp=0, dusk=0)
