@@ -234,19 +234,21 @@ for f in range(N):
             # 3c: two-shot Kairo + EVA — biru vs merah di satu frame
             t = seg_t(f, 480, 599)
             # EVA berjalan mendekat ke Kairo selama two-shot (85,-1 -> 82.5,0.5)
-            eva_x = lerp(85, 82.5, smooth(t))
-            eva_y = lerp(-1, 0.5, smooth(t))
+            # — jalan selesai di tengah segmen (f540) supaya two-shot utuh
+            # terbaca di paruh kedua 3c, bukan hanya di frame terakhir.
+            tt = smooth(min(1.0, t * 2.0))
+            eva_x = lerp(85, 82.5, tt)
+            eva_y = lerp(-1, 0.5, tt)
             chars["EVA"] = char(eva_x, eva_y, 0, rot=135, lean=2, head_tilt=0,
                                 armL=5, armR=5, legL=0, legR=0)
             chars["KAI"] = char(RX, 3.5, 0, rot=135, lean=4, head_tilt=0, head_turn=25,
                                 armL=5, armR=5, legL=0, legR=0)
             chars["SEN1"] = sentinel_frozen(RX - 3, 12)
             chars["SEN2"] = sentinel_frozen(RX + 3, 12)
-            chars_cam = cam(87.0, 8.5, 1.7, 81.25, 2.0, 1.4, 6.5, 50)
-            # FIX R3b: kamera two-shot HARUS jauh (87, 8.5) — kamera dekat
-            # (84.5, 4.5) membuat sudut kedua karakter ~80° > FOV horizontal
-            # 9:16 (~36°) sehingga frame KOSONG. EVA juga digeser mendekat
-            # ke Kairo supaya keduanya muat (sudut ~25°).
+            chars_cam = cam(88.5, 10.0, 1.7, 81.25, 2.0, 1.4, 6.5, 50)
+            # FIX R3c: kamera ditarik lebih jauh (87,8.5 -> 88.5,10) + jalan EVA
+            # dipercepat (selesai f540) — keduanya kini ~9.5° dari sumbu, muat
+            # dengan margin di FOV horizontal 9:16 (~36°).
             li = lights(moon=80, nexus=300, rim=400, fill=200, core=150, gate=0,
                         eva=500, neon=0, lamp=0, dusk=0)
         for _p in ("SEN3", "SEN4", "SEN5", "SEN6", "SEN7", "SEN8",
