@@ -620,18 +620,18 @@ make_character("CIV2", "civ", 1.0, (0, 0, 0), JACKET2, SKIN_KAI, EYE_DARK)
 # builder zombie (-X) justru sisi kanan). RONDE FIX 1: garis TIPIS warna
 # kulit sedikit lebih terang #D8B49A (bukan putih), TANPA emissive — versi
 # lama (0.12 x 0.022, emissive 0.15) terbaca seperti plester putih tebal.
-SCAR_M = mat("Scar", (0.72, 0.58, 0.47), 0.7)  # FIX R1: lebih gelap + kasar, bukan putih
+SCAR_M = mat("Scar", (0.65, 0.50, 0.40), 0.7)  # FIX R2: lebih gelap lagi
 # y=-0.22 (bukan -0.28): permukaan dahi di titik ini y~-0.19 — luka lama
 # mengambang ~9 cm di depan kulit sehingga terbaca seperti strip terpisah.
 # Kini menempel di kulit (0.04 di depan permukaan), tetap terbaca sebagai garis.
-scar = block("KAI_Scar", (0.11, -0.22, 1.60), (0.07, 0.010, 0.008), SCAR_M,  # FIX R1: lebih tipis
+scar = block("KAI_Scar", (0.11, -0.22, 1.60), (0.06, 0.008, 0.006), SCAR_M,  # FIX R2: garis tipis
              rot=(0, 0, math.radians(-25)))
 CHARS["KAI"]["head"].append(scar)
 CHARS["KAI"]["scar"] = scar
 # EPIC Ep 2 — kilau biru bekas luka (S4 ECU saja, SANGAT lemah): glow tipis
 # di depan garis luka, di-key via prop scar_glow di animate.
-SCAR_GLOW_M = emissive("ScarGlowBlue", (0.30, 0.65, 1.0), 1.5)  # FIX R1: biru harus terbaca
-scar_glow = block("KAI_ScarGlow", (0.11, -0.235, 1.60), (0.09, 0.012, 0.010),
+SCAR_GLOW_M = emissive("ScarGlowBlue", (0.10, 0.30, 0.90), 0.8)  # FIX R2: biru PEKAT + redup (1.5 tercuci jadi putih pucat)
+scar_glow = block("KAI_ScarGlow", (0.11, -0.235, 1.60), (0.07, 0.006, 0.008),
                   SCAR_GLOW_M, rot=(0, 0, math.radians(-25)))
 scar_glow.hide_render = True
 CHARS["KAI"]["head"].append(scar_glow)

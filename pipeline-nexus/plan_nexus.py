@@ -174,10 +174,10 @@ for f in range(N):
             chars["CIV1"] = ped_walk(lerp(-4, 2, t), 2.5, f, 1.0, rot=90, amp=18)
             chars["CIV2"] = ped_walk(lerp(-2, 4, t), -1.5, f, 3.0, rot=90, amp=18)
             chars_cam = cam(0, lerp(-9, -5.5, smooth(t)), lerp(15, 9.5, smooth(t)),
-                            0, 2, 0, 12, 40)
+                            0, 2, 0, 12, 34)  # FIX R2: lensa lebih lebar — layar NEXUS masuk frame
             # layar kota berkedip (nexus flicker) + grid meredup
             nex = 600 if (f // 5) % 2 == 0 else 150
-            li = lights(siren=200, lamp=300, dusk=60, moon=260, nexus=nex, rim=0, fill=90)
+            li = lights(siren=200, lamp=300, dusk=60, moon=260, nexus=nex, rim=0, fill=130)  # FIX R2: jalan bawah tidak gelap total
         else:
             # 2c: kembali ke ruang inti — push-in ke wajah yang meredup
             t = seg_t(f, 216, 287)
