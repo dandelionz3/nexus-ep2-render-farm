@@ -366,7 +366,7 @@ for f in range(N):
                             RX, lerp(6.0, 18.0, smooth(t)), lerp(1.5, 3.0, smooth(t)),
                             lerp(7.0, 18.0, smooth(t)), lerp(50, 55, t))
             li = lights(moon=80, nexus=800, rim=600, fill=200, core=150,
-                        gate=lerp(0, 400, smooth(t)), eva=400, eye=500,
+                        gate=lerp(0, 250, smooth(t)), eva=400, eye=500,
                         neon=0, lamp=0, dusk=0)
         else:
             # 6b: Kairo menoleh ke gerbang — wajah setengah putih setengah merah
@@ -383,7 +383,7 @@ for f in range(N):
             chars_cam = cam(RX + 0.8, lerp(-4.5, -3.5, smooth(t)), lerp(1.5, 1.4, smooth(t)),
                             RX, 3.0, 1.5, lerp(4.0, 3.0, smooth(t)), lerp(55, 65, t))
             li = lights(moon=80, nexus=700, rim=500, fill=200, core=150,
-                        gate=lerp(400, 600, smooth(t)), eva=400, eye=500,
+                        gate=lerp(250, 400, smooth(t)), eva=400, eye=500,
                         neon=0, lamp=0, dusk=0)
         for _p in ("SEN3", "SEN4", "SEN5", "SEN6", "SEN7", "SEN8",
                    "RES1", "RES2", "CIV1", "CIV2"):
@@ -441,10 +441,10 @@ for f in range(N):
                                  armL=6, armR=55, legL=0, legR=0, eye_red=True)
             chars["SEN2"] = char(RX + 3, 12, 0, rot=0, lean=5, head_tilt=0,
                                  armL=6, armR=55, legL=0, legR=0, eye_red=True)
-            chars_cam = cam(RX + 0.6, lerp(-7.0, -6.0, smooth(t)), lerp(1.2, 1.3, smooth(t)),
-                            RX, 5.0, 1.4, 8.0, lerp(50, 48, t))
+            chars_cam = cam(RX + 0.6, lerp(-5.5, -4.5, smooth(t)), lerp(1.2, 1.3, smooth(t)),
+                            RX, 5.0, 1.4, 8.0, lerp(54, 52, t))
             li = lights(moon=80, nexus=1500, rim=600, fill=200, core=150,
-                        gate=600, eva=500, eye=700, neon=0, lamp=0, dusk=0)
+                        gate=400, eva=500, eye=700, neon=0, lamp=0, dusk=0)
         else:
             # 8b: pull-back lambat -> hitam + end card (f1380-1439, ASS)
             t = seg_t(f, 1380, 1439)
@@ -456,12 +456,12 @@ for f in range(N):
                                  armL=6, armR=55, legL=0, legR=0, eye_red=True)
             chars["SEN2"] = char(RX + 3, 12, 0, rot=0, lean=5, head_tilt=0,
                                  armL=6, armR=55, legL=0, legR=0, eye_red=True)
-            chars_cam = cam(RX + 0.6, lerp(-6.0, -9.0, smooth(t)), lerp(1.3, 2.0, smooth(t)),
+            chars_cam = cam(RX + 0.6, lerp(-4.5, -7.5, smooth(t)), lerp(1.3, 2.0, smooth(t)),
                             RX, 5.0, 1.4, lerp(8.0, 11.0, smooth(t)), lerp(48, 42, t))
             # ruangan meredup menuju hitam (nexus + gate turun pelan)
             dim = 1.0 - 0.55 * smooth(seg_t(f, 1400, 1439))
             li = lights(moon=80, nexus=1500 * dim, rim=600 * dim, fill=200 * dim,
-                        core=150, gate=600 * dim, eva=500 * dim, eye=700,
+                        core=150, gate=400 * dim, eva=500 * dim, eye=700,
                         neon=0, lamp=0, dusk=0)
         for _p in ("SEN3", "SEN4", "SEN5", "SEN6", "SEN7", "SEN8",
                    "RES1", "RES2", "CIV1", "CIV2"):

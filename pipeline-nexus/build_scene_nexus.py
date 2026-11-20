@@ -187,7 +187,7 @@ WOOD = mat("Wood", (0.35, 0.22, 0.12), 0.7)
 CABLE_M = mat("Cable", (0.08, 0.08, 0.09), 0.6)
 CORE_BODY = mat("CoreBody", (0.04, 0.04, 0.05), 0.3, metal=0.7)
 CORE_LINE = emissive("CoreLine", (1.0, 0.05, 0.05), 1.4)     # garis merah data core
-GATE_M = emissive("GateLight", (1.0, 1.0, 0.95), 0.6)         # gerbang cahaya putih (disembunyikan s.d. S8; 1.5 lalu 0.9 masih blown-out putih murni)
+GATE_M = emissive("GateLight", (1.0, 1.0, 0.95), 1.2)  # FIX R1: gerbang harus lebih terang dari dinding         # gerbang cahaya putih (disembunyikan s.d. S8; 1.5 lalu 0.9 masih blown-out putih murni)
 RAIN_M = mat("Rain", (0.75, 0.82, 0.9), 0.1)
 RAIN_M.blend_method = "BLEND"
 RAIN_M.node_tree.nodes["Principled BSDF"].inputs["Alpha"].default_value = 0.35
@@ -404,26 +404,26 @@ ball("NX_FaceHead", (RX, 23.4, 10.0), (5.2, 1.0, 4.0), NEXUS_HEAD)  # EPIC: kepa
 # ujung dalam turun — rotasi Z hanya memiringkan ke arah dalam/luar layar,
 # bukan di layar). Glow samar di belakang tiap mata (y=10.92: di belakang
 # permukaan depan mata, di depan permukaan bola ~10.98).
-eyeL = ball("NX_EyeL", (RX - 2.3, 23.35, 11.0), (1.7, 0.36, 0.64), NEXUS_EYE_BIG)
+eyeL = ball("NX_EyeL", (RX - 2.3, 22.32, 11.0), (1.7, 0.36, 0.64), NEXUS_EYE_BIG)
 eyeL.rotation_euler = (0, math.radians(10), 0)
-eyeR = ball("NX_EyeR", (RX + 2.3, 23.35, 11.0), (1.7, 0.36, 0.64), NEXUS_EYE_BIG)
+eyeR = ball("NX_EyeR", (RX + 2.3, 22.32, 11.0), (1.7, 0.36, 0.64), NEXUS_EYE_BIG)
 eyeR.rotation_euler = (0, math.radians(-10), 0)
-plane("NX_EyeGlowL", (RX - 2.3, 23.42, 11.0), (3.0, 1.7), NEXUS_EYE_GLOW,
+plane("NX_EyeGlowL", (RX - 2.3, 22.38, 11.0), (3.0, 1.7), NEXUS_EYE_GLOW,
       rot=(math.radians(90), 0, 0))
-plane("NX_EyeGlowR", (RX + 2.3, 23.42, 11.0), (3.0, 1.7), NEXUS_EYE_GLOW,
+plane("NX_EyeGlowR", (RX + 2.3, 22.38, 11.0), (3.0, 1.7), NEXUS_EYE_GLOW,
       rot=(math.radians(90), 0, 0))
 # alis: miring mengancam (rotasi Y — ujung dalam turun; rotasi Z lama hanya
 # memiringkan ke dalam layar, nyaris tak terlihat dari depan)
-block("NX_BrowL", (RX - 2.3, 23.35, 12.3), (2.2, 0.2, 0.24), NEXUS_RED,
+block("NX_BrowL", (RX - 2.3, 22.32, 12.3), (2.2, 0.2, 0.24), NEXUS_RED,
       rot=(0, math.radians(16), 0))
-block("NX_BrowR", (RX + 2.3, 23.35, 12.3), (2.2, 0.2, 0.24), NEXUS_RED,
+block("NX_BrowR", (RX + 2.3, 22.32, 12.3), (2.2, 0.2, 0.24), NEXUS_RED,
       rot=(0, math.radians(-16), 0))
-block("NX_Nose", (RX, 23.35, 10.0), (0.24, 0.2, 1.8), NEXUS_RED)
-block("NX_Mouth", (RX, 23.35, 8.0), (3.2, 0.2, 0.28), NEXUS_EYE)
+block("NX_Nose", (RX, 22.32, 10.0), (0.24, 0.2, 1.8), NEXUS_RED)
+block("NX_Mouth", (RX, 22.32, 8.0), (3.2, 0.2, 0.28), NEXUS_EYE)
 # scanline horizontal tipis melintasi wajah (z 5.5/7.0/7.9: di antara
 # mulut-mata-alis, tidak menutupi mata) — samar, alpha 0.5
 for _i, _sz in enumerate((8.5, 11.0, 13.0)):
-    block(f"NX_Scan{_i}", (RX, 23.30, _sz), (10.8, 0.06, 0.09), SCAN_M)
+    block(f"NX_Scan{_i}", (RX, 22.28, _sz), (10.8, 0.06, 0.09), SCAN_M)
 # partikel wajah: grid titik merah di sekitar wajah
 import random as _random2
 _random2.seed(2149)
@@ -464,9 +464,9 @@ for i, (ccx, ccy) in enumerate(((-20, -12), (-20, 12), (20, -12), (20, 12),
 # soket core di tengah ruangan (S6: Kairo memasang core) — KECIL + RENDAH +
 # GESER ke samping (RX+0.6, -0.6): soket 1.0 m di tengah (RX,0) menutupi badan
 # Kairo di shot hero S8 (f1422 v2) dan Kairo menembusnya saat jalan ke gerbang.
-cylinder("NX_SocketBase", (RX + 0.6, -0.6, 0.175), 0.32, 0.35, SOCKET_M)
-cylinder("NX_SocketTop", (RX + 0.6, -0.6, 0.40), 0.22, 0.10, METAL_SEN2)
-block("NX_SocketSlot", (RX + 0.6, -0.6, 0.46), (0.14, 0.14, 0.05), CORE_LINE)
+cylinder("NX_SocketBase", (RX + 2.5, -3.0, 0.175), 0.32, 0.35, SOCKET_M)
+cylinder("NX_SocketTop", (RX + 2.5, -3.0, 0.40), 0.22, 0.10, METAL_SEN2)
+block("NX_SocketSlot", (RX + 2.5, -3.0, 0.46), (0.14, 0.14, 0.05), CORE_LINE)
 # gerbang cahaya putih di ujung (S8) — di dinding belakang bawah, di bawah wajah
 # (disembunyikan via props["gate"] s.d. S8 — di S6/S7 ia terbaca seperti pintu putih polos)
 _gate_plane = plane("NX_Gate", (RX, 23.55, 3.0), (5.0, 6.0), GATE_M, rot=(math.radians(90), 0, 0))  # EPIC: gerbang 5x6 m, TERBUKA di S6 (skala X di-key di animate)
@@ -620,18 +620,18 @@ make_character("CIV2", "civ", 1.0, (0, 0, 0), JACKET2, SKIN_KAI, EYE_DARK)
 # builder zombie (-X) justru sisi kanan). RONDE FIX 1: garis TIPIS warna
 # kulit sedikit lebih terang #D8B49A (bukan putih), TANPA emissive — versi
 # lama (0.12 x 0.022, emissive 0.15) terbaca seperti plester putih tebal.
-SCAR_M = mat("Scar", (0.847, 0.706, 0.604), 0.5)
+SCAR_M = mat("Scar", (0.72, 0.58, 0.47), 0.7)  # FIX R1: lebih gelap + kasar, bukan putih
 # y=-0.22 (bukan -0.28): permukaan dahi di titik ini y~-0.19 — luka lama
 # mengambang ~9 cm di depan kulit sehingga terbaca seperti strip terpisah.
 # Kini menempel di kulit (0.04 di depan permukaan), tetap terbaca sebagai garis.
-scar = block("KAI_Scar", (0.11, -0.22, 1.60), (0.10, 0.015, 0.012), SCAR_M,
+scar = block("KAI_Scar", (0.11, -0.22, 1.60), (0.07, 0.010, 0.008), SCAR_M,  # FIX R1: lebih tipis
              rot=(0, 0, math.radians(-25)))
 CHARS["KAI"]["head"].append(scar)
 CHARS["KAI"]["scar"] = scar
 # EPIC Ep 2 — kilau biru bekas luka (S4 ECU saja, SANGAT lemah): glow tipis
 # di depan garis luka, di-key via prop scar_glow di animate.
-SCAR_GLOW_M = emissive("ScarGlowBlue", (0.30, 0.65, 1.0), 0.5)
-scar_glow = block("KAI_ScarGlow", (0.11, -0.235, 1.60), (0.10, 0.012, 0.012),
+SCAR_GLOW_M = emissive("ScarGlowBlue", (0.30, 0.65, 1.0), 1.5)  # FIX R1: biru harus terbaca
+scar_glow = block("KAI_ScarGlow", (0.11, -0.235, 1.60), (0.09, 0.012, 0.010),
                   SCAR_GLOW_M, rot=(0, 0, math.radians(-25)))
 scar_glow.hide_render = True
 CHARS["KAI"]["head"].append(scar_glow)
@@ -666,8 +666,8 @@ CORE_OBJS = [core, core_line1, core_line2]
 for _o in CORE_OBJS:
     _o.hide_render = True
 # core terpasang di soket ruang inti (S6+) — ikut posisi soket geser
-core_sock = block("CoreSocketed", (RX + 0.6, -0.6, 0.48), (0.12, 0.12, 0.12), CORE_BODY)
-core_sock_l = block("CoreSocketedLine", (RX + 0.6, -0.6, 0.48), (0.13, 0.13, 0.02), CORE_LINE)
+core_sock = block("CoreSocketed", (RX + 2.5, -3.0, 0.48), (0.12, 0.12, 0.12), CORE_BODY)
+core_sock_l = block("CoreSocketedLine", (RX + 2.5, -3.0, 0.48), (0.13, 0.13, 0.02), CORE_LINE)
 CORE_SOCKET_OBJS = [core_sock, core_sock_l]
 for _o in CORE_SOCKET_OBJS:
     _o.hide_render = True
