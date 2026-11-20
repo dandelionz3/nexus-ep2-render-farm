@@ -222,9 +222,12 @@ for f in range(N):
                                 armL=5, armR=5, legL=0, legR=0)
             chars["SEN1"] = sentinel_frozen(RX - 3, 12)
             chars["SEN2"] = sentinel_frozen(RX + 3, 12)
-            chars_cam = cam(lerp(85 + 1.5, 85 + 0.8, smooth(t)), lerp(-5.5, -3.2, smooth(t)),
-                            lerp(1.8, 1.6, smooth(t)),
+            chars_cam = cam(lerp(87.3, 86.6, smooth(t)), lerp(1.3, 0.6, smooth(t)),
+                            lerp(1.7, 1.6, smooth(t)),
                             85, -1, 1.5, lerp(4.5, 2.4, smooth(t)), lerp(48, 60, t))
+            # FIX R3: kamera pindah ke DEPAN EVA (sisi +x+y, arah dia menghadap,
+            # rot=135) — sebelumnya di -y (belakang) sehingga wajah/mata biru
+            # TIDAK PERNAH terlihat; 3b harus menunjukkan mata biru.
             li = lights(moon=80, nexus=250, rim=300, fill=200, core=150, gate=0,
                         eva=600, neon=0, lamp=0, dusk=0)
         else:
@@ -236,8 +239,11 @@ for f in range(N):
                                 armL=5, armR=5, legL=0, legR=0)
             chars["SEN1"] = sentinel_frozen(RX - 3, 12)
             chars["SEN2"] = sentinel_frozen(RX + 3, 12)
-            chars_cam = cam(lerp(82.5, 82.0, smooth(t)), lerp(-6.0, -5.0, smooth(t)),
+            chars_cam = cam(lerp(84.5, 84.0, smooth(t)), lerp(4.5, 4.0, smooth(t)),
                             1.7, 82.5, 1.0, 1.4, 6.5, 50)
+            # FIX R3: kamera two-shot pindah ke DEPAN (+x+y) — sebelumnya di
+            # belakang-kiri (-y) sehingga yang terlihat punggung Kairo + EVA,
+            # bukan "biru vs merah di satu frame".
             li = lights(moon=80, nexus=300, rim=400, fill=200, core=150, gate=0,
                         eva=500, neon=0, lamp=0, dusk=0)
         for _p in ("SEN3", "SEN4", "SEN5", "SEN6", "SEN7", "SEN8",
@@ -398,9 +404,12 @@ for f in range(N):
                                 armL=5, armR=5, legL=0, legR=0)
             chars["KAI"] = char(RX, 3.0, 0, rot=135, lean=4, head_tilt=0, head_turn=-30,
                                 armL=5, armR=5, legL=0, legR=0)
-            chars_cam = cam(lerp(84 + 1.2, 84 + 0.7, smooth(t)), lerp(-3.5, -2.0, smooth(t)),
+            chars_cam = cam(lerp(85.8, 85.3, smooth(t)), lerp(2.4, 1.6, smooth(t)),
                             lerp(1.7, 1.6, smooth(t)),
                             84, 0, 1.5, lerp(3.5, 1.8, smooth(t)), lerp(50, 68, t))
+            # FIX R3: kamera ECU pindah ke DEPAN EVA (+x+y, arah rot=135) —
+            # sebelumnya di -y (belakang) sehingga yang terlihat punggung
+            # kepala, bukan "dolly-in ke mata EVA".
             li = lights(moon=80, nexus=400, rim=400, fill=200, core=150,
                         gate=500, eva=700, neon=0, lamp=0, dusk=0)
         else:
