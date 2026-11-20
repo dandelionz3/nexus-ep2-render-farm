@@ -1,0 +1,128 @@
+name: render-nexus-ep2-test
+
+# Uji 120 frame film NEXUS ZERO Episode 2 "THE FIRST DOUBT" (Eevee, setting B7
+# dengan DEVIASI TERUKUR: samples 6, bukan 8 — sama seperti Ep 1 / zombie v2):
+#   - S1 hook, plan f0-29       (frame Blender 1-30):      5 job x 6 frame
+#   - S2 NEXUS gagap, plan f72-101 (frame Blender 73-102):  5 job x 6 frame
+#   - S4 ECU bekas luka, plan f600-629 (Blender 601-630):  5 job x 6 frame
+#   - S8 hero, plan f1380-1409 (Blender 1381-1410):        5 job x 6 frame
+#   - 9:16 540x960 lensk 0.62 saja (16:9 menyusul di full run)
+#   - actions/cache untuk Blender 4.5.3 (pola nexus-render-farm Ep 1)
+#   - download Blender pakai retry loop + curl -f + cek >200 MB + mirror OCF
+# Dipicu manual dari tab Actions. Repo harus PUBLIK supaya menit gratis.
+# Verifikasi setelah selesai: semua 120 frame ada tanpa gap + cek visual
+# langsung frame kunci (S1 hook, S2 gagap, S4 ECU luka, S8 hero).
+# Workflow ini TIDAK memicu full run (tugas terpisah setelah tes lolos).
+on:
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { fmt: "9x16", seg: "s1-01", res_x: 540, res_y: 960, lensk: "0.62", start: 1,    end: 6 }
+          - { fmt: "9x16", seg: "s1-02", res_x: 540, res_y: 960, lensk: "0.62", start: 7,    end: 12 }
+          - { fmt: "9x16", seg: "s1-03", res_x: 540, res_y: 960, lensk: "0.62", start: 13,    end: 18 }
+          - { fmt: "9x16", seg: "s1-04", res_x: 540, res_y: 960, lensk: "0.62", start: 19,    end: 24 }
+          - { fmt: "9x16", seg: "s1-05", res_x: 540, res_y: 960, lensk: "0.62", start: 25,    end: 30 }
+          - { fmt: "9x16", seg: "s2-01", res_x: 540, res_y: 960, lensk: "0.62", start: 73,    end: 78 }
+          - { fmt: "9x16", seg: "s2-02", res_x: 540, res_y: 960, lensk: "0.62", start: 79,    end: 84 }
+          - { fmt: "9x16", seg: "s2-03", res_x: 540, res_y: 960, lensk: "0.62", start: 85,    end: 90 }
+          - { fmt: "9x16", seg: "s2-04", res_x: 540, res_y: 960, lensk: "0.62", start: 91,    end: 96 }
+          - { fmt: "9x16", seg: "s2-05", res_x: 540, res_y: 960, lensk: "0.62", start: 97,    end: 102 }
+          - { fmt: "9x16", seg: "s4-01", res_x: 540, res_y: 960, lensk: "0.62", start: 601,    end: 606 }
+          - { fmt: "9x16", seg: "s4-02", res_x: 540, res_y: 960, lensk: "0.62", start: 607,    end: 612 }
+          - { fmt: "9x16", seg: "s4-03", res_x: 540, res_y: 960, lensk: "0.62", start: 613,    end: 618 }
+          - { fmt: "9x16", seg: "s4-04", res_x: 540, res_y: 960, lensk: "0.62", start: 619,    end: 624 }
+          - { fmt: "9x16", seg: "s4-05", res_x: 540, res_y: 960, lensk: "0.62", start: 625,    end: 630 }
+          - { fmt: "9x16", seg: "s8-01", res_x: 540, res_y: 960, lensk: "0.62", start: 1381,    end: 1386 }
+          - { fmt: "9x16", seg: "s8-02", res_x: 540, res_y: 960, lensk: "0.62", start: 1387,    end: 1392 }
+          - { fmt: "9x16", seg: "s8-03", res_x: 540, res_y: 960, lensk: "0.62", start: 1393,    end: 1398 }
+          - { fmt: "9x16", seg: "s8-04", res_x: 540, res_y: 960, lensk: "0.62", start: 1399,    end: 1404 }
+          - { fmt: "9x16", seg: "s8-05", res_x: 540, res_y: 960, lensk: "0.62", start: 1405,    end: 1410 }
+    env:
+      FS_SAMPLES: "6"
+      FS_RAY: "0"
+      FS_VOL: "1"
+      FS_VOLTILE: "16"
+      FS_DOF: "1"
+      FS_MB: "1"
+      FS_SUB: "1"
+      FS_BEVEL: "0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Mesa/EGL + DejaVu font
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1-mesa-dri libglx-mesa0 fonts-dejavu-core
+          ldconfig -p | grep libEGL
+
+      - name: Restore cached Blender
+        id: cache-blender
+        uses: actions/cache@v4
+        with:
+          path: blender-4.5.3-linux-x64
+          key: blender-4.5.3-linux-x64
+
+      - name: Download Blender 4.5.3 LTS (cache miss only, with retries)
+        # Pelajaran Ep 1 run 44600190210: download.blender.org sempat mengembalikan
+        # halaman error 61 KB (bukan tarball ~300 MB) 3x berturut-turut — curl tanpa
+        # -f menganggapnya sukses. Fix: curl -f, cek ukuran >200 MB sebelum tar,
+        # fallback mirror OCF Berkeley.
+        if: steps.cache-blender.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          URLS=(
+            "https://download.blender.org/release/Blender4.5/blender-4.5.3-linux-x64.tar.xz"
+            "https://mirrors.ocf.berkeley.edu/blender/release/Blender4.5/blender-4.5.3-linux-x64.tar.xz"
+          )
+          OK=0
+          for URL in "${URLS[@]}"; do
+            for i in 1 2 3; do
+              echo "Download attempt $i from $URL"
+              if curl -fSL --retry 3 --retry-delay 10 --retry-all-errors \
+                  -o blender.tar.xz "$URL" \
+                  && [ "$(stat -c%s blender.tar.xz)" -gt 200000000 ] \
+                  && tar -tf blender.tar.xz >/dev/null; then
+                echo "Download OK: $URL attempt $i ($(stat -c%s blender.tar.xz) bytes)"
+                OK=1
+                break 2
+              fi
+              echo "Download attempt $i from $URL failed, retrying in 30s..."
+              rm -f blender.tar.xz
+              sleep 30
+            done
+          done
+          if [ "$OK" != 1 ]; then echo "FAIL: Blender download failed (primer + mirror)"; exit 1; fi
+          tar -xf blender.tar.xz
+          ./blender-4.5.3-linux-x64/blender --version
+
+      - name: Render 6 frames
+        run: |
+          START=${{ matrix.start }}
+          END=${{ matrix.end }}
+          echo "Chunk ${{ matrix.fmt }}-${{ matrix.seg }}: frames $START-$END (cache-hit=${{ steps.cache-blender.outputs.cache-hit }})"
+          mkdir -p "$GITHUB_WORKSPACE/out"
+          S=$(date +%s)
+          # NOTE: keberhasilan dinilai dari FILE FRAME, bukan exit code Blender —
+          # Mesa bisa segfault saat teardown SETELAH semua frame tersimpan.
+          ./blender-4.5.3-linux-x64/blender -b --factory-startup \
+            -P pipeline-nexus/animate_nexus.py -- "$GITHUB_WORKSPACE/out" \
+            --start $START --end $END --plan pipeline-nexus/plan.json \
+            --res ${{ matrix.res_x }} ${{ matrix.res_y }} --lensk ${{ matrix.lensk }} || echo "blender exited rc=$?"
+          E=$(date +%s)
+          N=$(ls "$GITHUB_WORKSPACE/out"/f_*.png 2>/dev/null | wc -l)
+          echo "CHUNK=${{ matrix.fmt }}-${{ matrix.seg }} CACHE_HIT=${{ steps.cache-blender.outputs.cache-hit }} FRAMES=$N/6 SECS=$((E-S))" | tee -a "$GITHUB_STEP_SUMMARY"
+          if [ "$N" -lt 6 ]; then echo "FAIL: only $N/6 frames rendered"; exit 1; fi
+
+      - name: Upload frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: nexus-ep2-frames-${{ matrix.fmt }}-${{ matrix.seg }}
+          path: out/f_*.png
+          if-no-files-found: error
